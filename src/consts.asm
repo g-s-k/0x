@@ -1,43 +1,39 @@
-SYS_CALL equ 128
-SYS_EXIT equ 1
-SYS_WRITE equ 4
+SYS_EXIT equ 0x2000001
+SYS_WRITE equ 0x2000004
 STDIN equ 0
 STDOUT equ 1
 
 section .text
-  global _start
+  global _main
 
-_start:
-  push dword len1
-  push dword msg1
-  push dword STDOUT
-  mov eax, SYS_WRITE
-  sub esp, 4
-  int SYS_CALL
+_main:
+  mov rax, SYS_WRITE
+  mov rdi, STDOUT
+  mov rsi, msg1
+  mov rdx, len1
+  syscall
 
-  push dword len2
-  push dword msg2
-  push dword STDOUT
-  mov eax, SYS_WRITE
-  sub esp, 4
-  int SYS_CALL
+  mov rax, SYS_WRITE
+  mov rdi, STDOUT
+  mov rsi, msg2
+  mov rdx, len2
+  syscall
 
-  push dword len3
-  push dword msg3
-  push dword STDOUT
-  mov eax, SYS_WRITE
-  sub esp, 4
-  int SYS_CALL
+  mov rax, SYS_WRITE
+  mov rdi, STDOUT
+  mov rsi, msg3
+  mov rdx, len3
+  syscall
 
-  push dword len4
-  push dword msg4
-  push dword STDOUT
-  mov eax, SYS_WRITE
-  sub esp, 4
-  int SYS_CALL
+  mov rax, SYS_WRITE
+  mov rdi, STDOUT
+  mov rsi, msg4
+  mov rdx, len4
+  syscall
 
-  mov eax, SYS_EXIT
-  int SYS_CALL
+  mov rax, SYS_EXIT
+  mov rdi, 0
+  syscall
 
 section .data
   msg1 db "Hello.", 0xA, 0xD

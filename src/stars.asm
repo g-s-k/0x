@@ -1,28 +1,22 @@
 section .text
-  global _start
+  global _main
 
-_start:
-  push dword len
-  push dword msg
-  push dword 1
+_main:
+  mov rax, 0x2000004
+  mov rdi, 1
+  mov rsi, msg
+  mov rdx, len
+  syscall
 
-  mov eax, 0x4
-  sub esp, 4
-  int 0x80
+  mov rax, 0x2000004
+  mov rdi, 1
+  mov rsi, s2
+  mov rdx, 9
+  syscall
 
-  push dword 9
-  push dword s2
-  push dword 1
-
-  mov eax, 0x4
-  sub esp, 4
-  int 0x80
-
-  push dword 0
-
-  mov eax, 0x1
-  sub esp, 4
-  int 0x80
+  mov rax, 0x2000001
+  mov rdi, 0
+  syscall
 
 section .data
   msg db "Displaying 9 stars", 0xa

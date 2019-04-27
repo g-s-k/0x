@@ -1,38 +1,34 @@
 section	.text
-   global _start
+   global _main
 
-_start:
+_main:
   ;; print original form
-  push dword 9
-  push dword name
-  push dword 1
-  mov	eax, 4
-  sub esp, 4
-  int	0x80
+  mov	rax, 0x2000004
+  mov rdi, 1
+  mov rsi, name
+  mov rdx, 9
+  syscall
 
   ;; change the first four chars
-  mov	[name],  dword "Nuha"
+  mov	[rel name], dword "Nuha"
 
   ;; print it again
-  push dword 8                  ; no trailing space
-  push dword name
-  push dword 1
-  mov	eax, 4
-  sub esp, 4
-  int	0x80
+  mov	rax, 0x2000004
+  mov rdi, 1
+  mov rsi, name
+  mov rdx, 8                  ; no trailing space
+  syscall
 
   ;; newline
-  push dword 1
-  push dword nl
-  push dword 1
-  mov	eax, 4
-  sub esp, 4
-  int	0x80
+  mov	rax, 0x2000004
+  mov rdi, 1
+  mov rsi, nl
+  mov rdx, 1
+  syscall
 
   ;; exit
-  mov	eax, 1
-  sub esp, 4
-  int	0x80
+  mov	rax, 0x2000001
+  syscall
 
 section	.data
   name db "Zara Ali "

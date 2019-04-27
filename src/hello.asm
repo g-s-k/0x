@@ -1,23 +1,17 @@
 section .text
-  global _start
+  global _main
 
-_start:
-    push dword mylen
-    push dword mymsg
-    push dword 1
+_main:
+  mov rax, 0x2000004
+  mov rdi, 1
+  mov rsi, msg
+  mov rdx, msg.len
+  syscall
 
-    mov eax, 0x4
-    sub esp, 4
-    int 0x80
-
-    add esp, 16
-
-    push dword 0
-
-    mov eax, 0x1
-    sub esp, 4
-    int 0x80
+  mov rax, 0x2000001
+  mov rdi, 0
+  syscall
 
 section .data
-  mymsg db "hello, world", 0xa
-  mylen equ $-mymsg
+msg:  db "hello, world", 10
+  .len equ $ - msg

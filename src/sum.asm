@@ -1,7 +1,6 @@
-SYS_CALL equ 128
-SYS_EXIT equ 1
-SYS_READ equ 3
-SYS_WRITE equ 4
+SYS_EXIT equ 0x2000001
+SYS_READ equ 0x2000003
+SYS_WRITE equ 0x2000004
 
 STDIN equ 0
 STDOUT equ 1
@@ -24,77 +23,70 @@ section .bss
   res resb 1
 
 section .text
-  global _start
+  global _main
 
-_start:
+_main:
   ;; first prompt
-  push dword len1
-  push dword msg1
-  push dword STDOUT
-  mov eax, SYS_WRITE
-  sub esp, 4
-  int SYS_CALL
+  mov rax, SYS_WRITE
+  mov rdi, STDOUT
+  mov rsi, msg1
+  mov rdx, len1
+  syscall
 
   ;; read first digit
-  push dword 2
-  push dword num1
-  push dword STDIN
-  mov eax, SYS_READ
-  sub esp, 4
-  int SYS_CALL
+  mov rax, SYS_READ
+  mov rdi, STDIN
+  mov rsi, num1
+  mov rdx, 2
+  syscall
 
   ;; second prompt
-  push dword len2
-  push dword msg2
-  push dword STDOUT
-  mov eax, SYS_WRITE
-  sub esp, 4
-  int SYS_CALL
+  mov rax, SYS_WRITE
+  mov rdi, STDOUT
+  mov rsi, msg2
+  mov rdx, len2
+  syscall
 
   ;; read second digit
-  push dword 2
-  push dword num2
-  push dword STDIN
-  mov eax, SYS_READ
-  sub esp, 4
-  int SYS_CALL
+  mov rax, SYS_READ
+  mov rdi, STDIN
+  mov rsi, num2
+  mov rdx, 2
+  syscall
 
   ;; subtract ascii zero so they're raw integers
-  mov eax, [num1]
-  sub eax, "0"
-  mov ebx, [num2]
-  sub ebx, "0"
+  mov rax, [rel num1]
+  sub rax, "0"
+  mov rdi, [rel num2]
+  sub rdi, "0"
 
   ;; add as integers, then add ascii zero
-  add eax, ebx
-  add eax, "0"
-  mov [res], eax
+  add rax, rdi
+  add rax, "0"
+  mov [rel res], rax
 
   ;; result message
-  push dword len3
-  push dword msg3
-  push dword STDOUT
-  mov eax, SYS_WRITE
-  sub esp, 4
-  int SYS_CALL
+  mov rax, SYS_WRITE
+  mov rdi, STDOUT
+  mov rsi, msg3
+  mov rdx, len3
+  syscall
 
   ;; display sum
-  push dword 1
-  push dword res
-  push dword STDOUT
-  mov eax, 4
-  sub esp, SYS_WRITE
-  int SYS_CALL
+  mov rax, SYS_WRITE
+  mov rdi, STDOUT
+  mov rsi, res
+  mov rdx, 1
+  syscall
 
   ;; newline
-  push dword 1
-  push dword nl
-  push dword STDOUT
-  mov eax, SYS_WRITE
-  sub esp, 4
-  int SYS_CALL
+  mov rax, SYS_WRITE
+  mov rdi, STDOUT
+  mov rsi, nl
+  mov rdx, 1
+  syscall
 
   ;; exit
-  push dword 0
-  mov eax, SYS_EXIT
-  int SYS_CALL
+  mov rax, SYS_EXIT
+  mov rdi, 0
+  syscall

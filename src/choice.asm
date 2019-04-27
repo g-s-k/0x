@@ -1,17 +1,16 @@
 section .text
-  global _start
+  global _main
 
-_start:
-  push dword 1
-  push dword choice
-  push dword 1
-  mov eax, 4
-  sub esp, 4
-  int 0x80
+_main:
+  mov rax, 0x2000004
+  mov rdi, 1
+  mov rsi, choice
+  mov rdx, 1
+  syscall
 
-  mov eax, 1
-  mov ebx, 0
-  int 0x80
+  mov eax, 0x2000001
+  mov rdi, 0
+  syscall
 
 section .data
   choice db "y"
