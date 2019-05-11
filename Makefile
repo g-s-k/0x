@@ -2,7 +2,12 @@ SRCS = $(wildcard src/*.asm)
 OUTS = $(basename $(SRCS))
 BASE = $(notdir $(OUTS))
 
+.PHONY = run/%
+
 all: bin $(addprefix bin/, $(BASE))
+
+run/%: bin/%
+	$?
 
 bin:
 	mkdir bin
