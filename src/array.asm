@@ -8,8 +8,10 @@
 
 section .data
   x db 2, 4, 3
-  sum db 0
   nl db 0xa
+
+section .bss
+  sum resb 1
 
 section .text
   global _main
