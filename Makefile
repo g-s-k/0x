@@ -1,5 +1,13 @@
-LDFLAGS := -macosx_version_min 10.8
-LDLIBS := -lSystem
+UNAME := $(shell uname -s)
+
+ifeq ($(UNAME),Darwin)
+	LDFLAGS := -macosx_version_min 10.8
+	LDLIBS := -lSystem
+	NASMARCH := macho64
+else
+	LDFLAGS := -e _main
+	NASMARCH := elf64
+endif
 
 BIN_DIR := ./bin
 BUILD_DIR := ./build
@@ -15,7 +23,7 @@ $(BIN_DIR)/%: $(BUILD_DIR)/%.o
 	$(LD) $(LDLIBS) $(LDFLAGS) -o $@ $?
 
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.asm
-	nasm -f macho64 -o $@ $?
+	nasm -f $(NASMARCH) -o $@ $?
 
 $(BIN_DIR) $(BUILD_DIR):
 	mkdir -p $@

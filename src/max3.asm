@@ -1,3 +1,11 @@
+%ifidn __OUTPUT_FORMAT__, elf64
+  %define SYS_WRITE 1
+  %define SYS_EXIT 60
+%elifidn __OUTPUT_FORMAT__, macho64
+  %define SYS_WRITE 0x2000004
+  %define SYS_EXIT 0x2000001
+%endif
+
 section .data
 msg:   db "The highest leading digit belongs to: "
   .len equ $ - msg
@@ -45,26 +53,26 @@ _exit:
   mov [rel largest], r9
 
   ;; print message
-  mov rax, 0x2000004
+  mov rax, SYS_WRITE
   mov rdi, 1
   mov rsi, msg
   mov rdx, msg.len
   syscall
 
   ;; print result
-  mov rax, 0x2000004
+  mov rax, SYS_WRITE
   mov rdi, 1
   mov rsi, largest
   mov rdx, numlen
   syscall
 
   ;; print newline
-  mov rax, 0x2000004
+  mov rax, SYS_WRITE
   mov rdi, 1
   mov rsi, newline
   mov rdx, 1
   syscall
 
-  mov rax, 0x2000001
+  mov rax, SYS_EXIT
   mov rdi, 0
   syscall

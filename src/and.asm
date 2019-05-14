@@ -1,3 +1,11 @@
+%ifidn __OUTPUT_FORMAT__, elf64
+  %define SYS_WRITE 1
+  %define SYS_EXIT 60
+%elifidn __OUTPUT_FORMAT__, macho64
+  %define SYS_WRITE 0x2000004
+  %define SYS_EXIT 0x2000001
+%endif
+
 section .data
 even_msg: db  "Even Number!"
   .len equ  $ - even_msg
@@ -23,13 +31,13 @@ if_even:
   jmp print_msg
 
 print_msg:
-  mov rax, 0x2000004
+  mov rax, SYS_WRITE
   mov rdi, 1
   syscall
   jmp print_newline
 
 print_newline:
-  mov rax, 0x2000004
+  mov rax, SYS_WRITE
   mov rdi, 1
   mov rsi, newline
   mov rdx, 1
@@ -37,7 +45,7 @@ print_newline:
   jmp exit
 
 exit:
-  mov rax, 0x2000001
+  mov rax, SYS_EXIT
   mov rdi, 0
   syscall
 

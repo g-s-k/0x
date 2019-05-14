@@ -1,5 +1,11 @@
-SYS_EXIT equ 0x2000001
-SYS_WRITE equ 0x2000004
+%ifidn __OUTPUT_FORMAT__, elf64
+  SYS_EXIT equ 60
+  SYS_WRITE equ 1
+%elifidn __OUTPUT_FORMAT__, macho64
+  SYS_EXIT equ 0x2000001
+  SYS_WRITE equ 0x2000004
+%endif
+
 STDIN equ 0
 STDOUT equ 1
 
